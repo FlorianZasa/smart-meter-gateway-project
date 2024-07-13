@@ -4,6 +4,14 @@ import ipaddress
 from config import Config
 
 def lan_only(f):
+    """ Decorator to allow access only when connected via LAN.
+
+    Args:
+        f (function): The function to be decorated.
+
+    Returns:
+        function: The decorated function
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         client_ip = ipaddress.ip_address(request.remote_addr)
@@ -17,6 +25,14 @@ def lan_only(f):
     return decorated_function
 
 def wan_only(f):
+    """Decorator to allow access only when connected via WAN
+
+    Args:
+        f (function): The function to be decorated
+
+    Returns:
+        function: The decorated function
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         client_ip = ipaddress.ip_address(request.remote_addr)
@@ -30,5 +46,11 @@ def wan_only(f):
     return decorated_function
 
 def get_lan_networks():
+    """ Returns a list of IP networks that are considered part of the LAN.
+
+    Returns:
+        list: A list of ipaddress.IPv4Network or ipaddress.IPv6Network objects.
+
+    """
     lan_ranges = Config.LAN_IP_RANGES
     return [ipaddress.ip_network(network.strip()) for network in lan_ranges.split(',')]

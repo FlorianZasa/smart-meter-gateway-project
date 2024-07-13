@@ -10,6 +10,11 @@ class ConsumptionData:
         self.timestamp = timestamp or datetime.utcnow()
 
     def save_to_db(self):
+        """ Saves the User to the db
+
+        Returns:
+            str: The id of the inserted user
+        """
         data = {
             "user_id": ObjectId(self.user_id),
             "value": self.value,
@@ -25,6 +30,14 @@ class ConsumptionData:
 
     @staticmethod
     def find_by_id(data_id):
+        """ Find consumption by ID
+
+        Args:
+            data_id (int): The ID of the data
+
+        Returns:
+            ConsumptionData | None: The consumption data
+        """
         data = db.consumption_data.find_one({"_id": ObjectId(data_id)})
         if data:
             return ConsumptionData(
@@ -37,6 +50,14 @@ class ConsumptionData:
 
     @staticmethod
     def find_by_user_id(user_id):
+        """ Find consumption by user id
+
+        Args:
+            user_id (int): User ID
+
+        Returns:
+            ConsumptionData: Consumption data from user
+        """
         data_list = db.consumption_data.find({"user_id": ObjectId(user_id)})
         return [ConsumptionData(
                     user_id=data['user_id'],

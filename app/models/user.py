@@ -10,6 +10,11 @@ class User:
         self.role = role
 
     def save_to_db(self):
+        """ Saves the user to the db
+
+        Returns:
+            str: The id of the inserted user
+        """
         user_data = {
             "username": self.username,
             "password": generate_password_hash(self.password).decode('utf-8'),
@@ -25,6 +30,14 @@ class User:
 
     @staticmethod
     def find_by_username(username):
+        """ Find user by username
+
+        Args:
+            username (str): The username
+
+        Returns:
+            User | None: Returns the user
+        """
         user_data = db.users.find_one({"username": username})
         if user_data:
             return User(
@@ -37,6 +50,14 @@ class User:
 
     @staticmethod
     def find_by_id(user_id):
+        """ Finds the user by user id
+
+        Args:
+            user_id (int): User ID
+
+        Returns:
+            User | None: The found user
+        """
         user_data = db.users.find_one({"_id": ObjectId(user_id)})
         if user_data:
             return User(
@@ -48,6 +69,14 @@ class User:
         return None
 
     def check_password(self, password):
+        """ Checks if the password is correct
+
+        Args:
+            password (str): Password inserted by the user
+
+        Returns:
+            bool: Result of the check
+        """
         return check_password_hash(self.password, password)
 
     def to_dict(self):
